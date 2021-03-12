@@ -1,5 +1,5 @@
-defmodule App.ReleaseTasks do
-  @apps [:app]
+defmodule Example.ReleaseTasks do
+  @apps [:example]
   @start_apps [:postgrex, :ecto, :ecto_sql]
 
   def eval_migrate do
