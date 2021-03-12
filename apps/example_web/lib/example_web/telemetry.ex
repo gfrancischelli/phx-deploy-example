@@ -11,9 +11,10 @@ defmodule ExampleWeb.Telemetry do
     children = [
       # Telemetry poller will execute the given period measurements
       # every 10_000ms. Learn more here: https://hexdocs.pm/telemetry_metrics
-      {:telemetry_poller, measurements: periodic_measurements(), period: 10_000}
+      {:telemetry_poller, measurements: periodic_measurements(), period: 10_000},
       # Add reporters as children of your supervision tree.
       # {Telemetry.Metrics.ConsoleReporter, metrics: metrics()}
+      {TelemetryMetricsPrometheus, [metrics: prom_metrics()]}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
@@ -59,6 +60,18 @@ defmodule ExampleWeb.Telemetry do
       last_value("example.my_server.message_queue_len"),
       summary("example.my_server.call.stop.duration"),
       counter("example.my_server.call.exception")
+    ]
+  end
+
+  defp prom_metrics do
+    [
+      counter("http.request.count"),
+      sum("http.request.payload_size", unit: :byte),
+      sum("websocket.connection.count", reporter_options: [prometheus_type: :gauge]),
+      last_value("vm.memory.total", unit: :byte)
+      # distribution("vm.total_run_queue_lengths.total", reporter_options: [prometheus_type: :gauge]),
+      # distribution("vm.total_run_queue_lengths.cpu", reporter_options: [prometheus_type: :gauge]),
+      # distribution("vm.total_run_queue_lengths.io", reporter_options: [prometheus_type: :gauge])
     ]
   end
 

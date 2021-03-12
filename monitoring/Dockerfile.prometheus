@@ -1,0 +1,5 @@
+FROM prom/prometheus
+
+COPY monitoring/prometheus.dev.yml /etc/prometheus/
+
+CMD ["--config.file=/etc/prometheus/prometheus.dev.yml"]

@@ -8,6 +8,7 @@ services:
     env_file: ./env/dev.env
     ports:
       - 4000:4000
+      - 9568:9568
     depends_on:
       postgres:
         condition: service_healthy
@@ -32,3 +33,13 @@ services:
       - 5432:5432
     networks:
       - default
+
+  prometheus:
+    build:
+      context: .
+      dockerfile: monitoring/Dockerfile.prometheus
+    depends_on:
+      app:
+        condition: service_started
+    ports:
+      - 9090:9090

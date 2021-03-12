@@ -49,7 +49,8 @@ defmodule ExampleWeb.MixProject do
       {:gettext, "~> 0.11"},
       {:example, in_umbrella: true},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:telemetry_metrics_prometheus, "~> 1.0.0"}
     ]
   end
 
