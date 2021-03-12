@@ -10,9 +10,10 @@ defmodule Example.Application do
       # Start the Ecto repository
       Example.Repo,
       # Start the PubSub system
-      {Phoenix.PubSub, name: Example.PubSub}
+      {Phoenix.PubSub, name: Example.PubSub},
       # Start a worker by calling: Example.Worker.start_link(arg)
       # {Example.Worker, arg}
+      {Example.MyServer, fn -> "Hello, world!" end}
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one, name: Example.Supervisor)
