@@ -2,7 +2,7 @@
 # from environment variables. You can also hardcode secrets,
 # although such is generally not recommended and you have to
 # remember to add this file to your .gitignore.
-use Mix.Config
+import Config
 
 database_url =
   System.get_env("DATABASE_URL") ||
@@ -24,6 +24,10 @@ secret_key_base =
     """
 
 config :example_web, ExampleWeb.Endpoint,
+  # On development mode we start our server using with Mix using `mix phx.server`
+  # Since Mix is a build tool it will not be available on production environments
+  # This line of code ensures the server will be started
+  server: true,
   http: [
     port: String.to_integer(System.get_env("PORT") || "4000"),
     transport_options: [socket_opts: [:inet6]]
