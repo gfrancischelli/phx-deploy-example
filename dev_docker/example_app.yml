@@ -1,11 +1,11 @@
-version: "2.1"
+version: '3.3'
 services:
-  app:
+  example_app:
     image: app:dev
     build:
-      context: .
-      dockerfile: Dockerfile
-    env_file: ./env/dev.env
+      context: ..
+      dockerfile: ../Dockerfile
+    env_file: ../env/dev.env
     ports:
       - 4000:4000
       - 9568:9568
@@ -33,13 +33,3 @@ services:
       - 5432:5432
     networks:
       - default
-
-  prometheus:
-    build:
-      context: .
-      dockerfile: monitoring/Dockerfile.prometheus
-    depends_on:
-      app:
-        condition: service_started
-    ports:
-      - 9090:9090
