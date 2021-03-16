@@ -39,7 +39,7 @@ defmodule ExampleWeb.MixProject do
     [
       {:phoenix, "~> 1.5.6"},
       {:phoenix_ecto, "~> 4.0"},
-      {:phoenix_live_view, "~> 0.14.6"},
+      {:phoenix_live_view, "~> 0.14.8"},
       {:floki, ">= 0.27.0", only: :test},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
