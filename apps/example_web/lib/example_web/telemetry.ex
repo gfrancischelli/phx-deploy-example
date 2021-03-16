@@ -63,15 +63,38 @@ defmodule ExampleWeb.Telemetry do
     ]
   end
 
-  defp prom_metrics do
+  @doc """
+  Prometheus basic metrics that "every" project should probably have.
+  See [Prometheus Naming Best Practices](https://github.com/prometheus/docs/blob/master/content/docs/practices/naming.md)
+  """
+  def prom_metrics do
     [
-      counter("http.request.count"),
-      sum("http.request.payload_size", unit: :byte),
-      sum("websocket.connection.count", reporter_options: [prometheus_type: :gauge]),
-      last_value("vm.memory.total", unit: :byte)
-      # distribution("vm.total_run_queue_lengths.total", reporter_options: [prometheus_type: :gauge]),
-      # distribution("vm.total_run_queue_lengths.cpu", reporter_options: [prometheus_type: :gauge]),
-      # distribution("vm.total_run_queue_lengths.io", reporter_options: [prometheus_type: :gauge])
+      # Request rate
+      # You will usually want to track the rate of
+      # of changes rate(phoenix_endpoint_start[10m])
+      counter("phx_router_requests_total",
+        tags: [:route],
+        event_name: "phoenix.router_dispatch.stop",
+        measurement: :duration
+      ),
+      # Latency
+      # Quantiles will indicate how the experience is like for our users
+      # histogram_quantile(0.99, rate(phoenix_router_dispatch.stop[10m])
+      distribution("phx_router_duration",
+        unit: {:native, :millisecond},
+        reporter_options: [buckets: http_buckets()],
+        tags: [:method, :route],
+        tag_values: &get_and_put_http_method/1,
+        measurement: :duration,
+        event_name: "phoenix.router_dispatch.stop",
+        description: "A histogram of the request duration for phoenix http responses"
+      ),
+      # Error rate
+      counter("phx_router_errors_total",
+        tags: [:route],
+        event_name: "phoenix.router_dispatch.exception",
+        measurement: :duration
+      )
     ]
   end
 
@@ -99,4 +122,28 @@ defmodule ExampleWeb.Telemetry do
   # instead of:       ExampleWeb.PageLive (true|false)
   defp get_connection_status(%{connected?: true}), do: "Connected"
   defp get_connection_status(%{connected?: false}), do: "Disconnected"
+
+  defp http_buckets() do
+    [
+      10,
+      25,
+      50,
+      100,
+      250,
+      500,
+      1000,
+      2500,
+      5000,
+      10000,
+      25000,
+      50000,
+      100_000,
+      250_000,
+      500_000,
+      1_000_000,
+      2_500_000,
+      5_000_000,
+      10_000_000
+    ]
+  end
 end
