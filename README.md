@@ -3,9 +3,10 @@
 ## How do I run this?
 
 ```bash
-# Runs the app plus postgresql in docker
-docker-compose -f docker-compose.dev.yml
-# Creates tha database
-docker-compose -f docker-compose.dev.yml run app ./bin/example_umbrella eval "Example.ReleaseTasks.eval_createdb"
-```
+chmod +x ./start-docker-dev.sh
 
+# Runs the app plus postgresql in docker
+./start-docker-dev.sh up
+# Creates tha database 
+./start-docker-dev.sh run app ./bin/example_umbrella eval "Example.ReleaseTasks.eval_createdb"
+```
